@@ -1,6 +1,6 @@
 // 간단한 서비스워커: 정적 자산은 cache-first, 외부(CDN)는 stale-while-revalidate.
 
-const CACHE = 'taxi-v2';
+const CACHE = 'taxi-v3';
 const ASSETS = [
   './',
   './index.html',

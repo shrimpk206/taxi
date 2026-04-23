@@ -14,6 +14,15 @@ const els = {
   distStat: $('distStat'),
   timeStat: $('timeStat'),
   speedStat: $('speedStat'),
+  speedNum: $('speedNum'),
+  horseSvg: $('horseSvg'),
+  horseSurcharge: $('horseSurcharge'),
+  runChip: $('runChip'),
+  lampHalf: $('lampHalf'),
+  lampRun: $('lampRun'),
+  lampSur: $('lampSur'),
+  lampMix: $('lampMix'),
+  lampPay: $('lampPay'),
   nightChip: $('nightChip'),
   outsideChip: $('outsideChip'),
   timeFareChip: $('timeFareChip'),
@@ -69,10 +78,16 @@ function start() {
 
   // 초기 표시 리셋
   updateFare(0, false);
+  updateSpeedDisplay(0);
   els.distStat.textContent = '0.00 km';
   els.timeStat.textContent = '00:00';
-  els.speedStat.textContent = '0 km/h';
   els.timeFareChip.hidden = true;
+  els.horseSurcharge.textContent = '0%';
+  setLamp(els.lampRun, true);
+  setLamp(els.lampPay, false);
+  setLamp(els.lampSur, false);
+  setLamp(els.lampMix, false);
+  els.runChip.classList.add('on');
 
   // 1초마다 경과시간/심야할증 업데이트 (GPS 콜백 사이 시간도 메꿈)
   tickTimer = setInterval(heartbeat, 1000);
@@ -103,6 +118,12 @@ function stop() {
 
   els.startBtn.disabled = false;
   els.stopBtn.disabled = true;
+
+  // 말/램프: 정지 상태
+  updateSpeedDisplay(0);
+  setLamp(els.lampRun, false);
+  setLamp(els.lampPay, true);
+  els.runChip.classList.remove('on');
 }
 
 function heartbeat() {
@@ -157,7 +178,7 @@ function handleSample(sample) {
 
   updateFare(snap.totalFare, snap.fareBumped);
   els.distStat.textContent = (sample.totalDistanceM / 1000).toFixed(2) + ' km';
-  els.speedStat.textContent = Math.round(sample.speedKmh) + ' km/h';
+  updateSpeedDisplay(sample.speedKmh);
 
   lastSample = { speedKmh: sample.speedKmh, elapsedSec: sample.elapsedSec, distanceM: sample.totalDistanceM };
 
@@ -176,6 +197,11 @@ function refreshSurchargeChips(snap) {
     els.nightChip.hidden = true;
   }
   els.outsideChip.hidden = !hasOutside;
+
+  // 말 패널 할증% + 하단 상태램프
+  els.horseSurcharge.textContent = Math.round(snap.surchargeRate * 100) + '%';
+  setLamp(els.lampSur, snap.surchargeRate > 0);
+  setLamp(els.lampMix, hasNight && hasOutside);
 
   const isPositive = snap.surchargeRate > 0;
   if (isPositive && !lastSurchargeWasPositive) {
@@ -201,6 +227,26 @@ function updateFare(n, bumped) {
     void els.fareLed.offsetWidth;
     els.fareLed.classList.add('bump');
   }
+}
+
+function updateSpeedDisplay(speedKmh) {
+  const v = Math.max(0, speedKmh);
+  els.speedNum.textContent = v.toFixed(1);
+  els.speedStat.textContent = Math.round(v) + ' km/h';
+
+  // 말 갤롭: 속도 2 km/h 이상부터 달림. 속도↑ → 주기↓
+  // 기준: 30 km/h에서 0.4s, 60 km/h에서 0.2s, 5 km/h에서 2.4s.
+  if (v >= 2) {
+    const duration = Math.max(0.15, Math.min(1.8, 12 / v));
+    els.horseSvg.style.setProperty('--gallop-duration', duration.toFixed(2) + 's');
+    els.horseSvg.classList.add('running');
+  } else {
+    els.horseSvg.classList.remove('running');
+  }
+}
+
+function setLamp(el, on) {
+  el.classList.toggle('on', !!on);
 }
 
 // ---- 지도 ----

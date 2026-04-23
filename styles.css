@@ -79,31 +79,170 @@ body {
   box-shadow: inset 0 0 30px rgba(255, 0, 0, 0.05), 0 6px 24px rgba(0,0,0,0.6);
 }
 
-.meter-label {
-  font-size: 11px;
-  letter-spacing: 3px;
-  color: var(--muted);
-  margin-bottom: 8px;
+/* ------- 메인 디스플레이 (말 + 수치) ------- */
+
+.meter-main {
+  background: #1f1f1f;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: stretch;
 }
 
-.meter-display {
-  background: #000;
-  border: 1px solid #2a0000;
+/* -- 말 패널 -- */
+.horse-panel {
+  background: #141414;
+  border: 1px solid #2a2a2a;
   border-radius: 10px;
-  padding: 16px 20px;
+  padding: 8px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+  color: #d4a554; /* 말 라인 컬러 */
+}
+
+.horse-stage {
+  width: 100%;
+  height: 64px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.horse {
+  width: 92px;
+  height: 60px;
+  display: block;
+}
+
+/* 말 라인 스타일 */
+.horse .horse-body,
+.horse .speed-lines {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.horse .speed-lines { opacity: 0; stroke-width: 1.5; }
+
+/* 달릴 때: 몸 흔들림 + 다리 스윙 + 속도선 fade */
+.horse.running .horse-body {
+  animation: horse-bob var(--gallop-duration, 0.4s) linear infinite;
+  transform-origin: 50px 54px;
+}
+.horse.running .legs-front {
+  animation: leg-swing-a var(--gallop-duration, 0.4s) linear infinite;
+  transform-origin: 37px 54px;
+  transform-box: fill-box;
+}
+.horse.running .legs-back {
+  animation: leg-swing-b var(--gallop-duration, 0.4s) linear infinite;
+  transform-origin: 71px 54px;
+  transform-box: fill-box;
+}
+.horse.running .h-tail {
+  animation: tail-sway var(--gallop-duration, 0.4s) ease-in-out infinite;
+  transform-origin: 22px 38px;
+  transform-box: fill-box;
+}
+.horse.running .speed-lines {
+  animation: speed-fade var(--gallop-duration, 0.4s) linear infinite;
+}
+
+@keyframes horse-bob {
+  0%, 100% { transform: translateY(0) rotate(-0.5deg); }
+  50%      { transform: translateY(-2px) rotate(0.5deg); }
+}
+@keyframes leg-swing-a {
+  0%, 100% { transform: rotate(18deg); }
+  50%      { transform: rotate(-18deg); }
+}
+@keyframes leg-swing-b {
+  0%, 100% { transform: rotate(-18deg); }
+  50%      { transform: rotate(18deg); }
+}
+@keyframes tail-sway {
+  0%, 100% { transform: rotate(-6deg); }
+  50%      { transform: rotate(6deg); }
+}
+@keyframes speed-fade {
+  0%   { opacity: 0; transform: translateX(4px); }
+  40%  { opacity: 0.9; }
+  100% { opacity: 0; transform: translateX(-6px); }
+}
+
+.horse-surcharge {
+  font-family: ui-monospace, monospace;
+  font-weight: 800;
+  font-size: 13px;
+  color: #d4a554;
+  margin-top: 2px;
+}
+.horse-year {
+  font-family: 'Courier New', ui-monospace, monospace;
+  font-weight: 900;
+  font-size: 15px;
+  color: #ff3e3e;
+  text-shadow: 0 0 6px rgba(255, 50, 50, 0.6);
+  letter-spacing: 2px;
+}
+.horse-runchip {
+  margin-top: 4px;
+  background: #555;
+  color: #1a1a1a;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border-radius: 3px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.horse-runchip.on {
+  background: #ff4d4d;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(255, 60, 60, 0.7);
+}
+
+/* -- 우측 수치 패널 -- */
+.meter-readout {
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 6px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2px;
+}
+.speed-row {
+  text-align: right;
+  font-family: ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  color: #e8e8e8;
+  letter-spacing: 1px;
+}
+.speed-num { font-size: 20px; font-weight: 800; }
+.speed-unit { font-size: 12px; color: var(--muted); margin-left: 4px; }
+
+.fare-row {
   display: flex;
   align-items: baseline;
   justify-content: flex-end;
-  gap: 10px;
-  min-height: 96px;
-  box-shadow: inset 0 0 20px rgba(255,0,0,0.2);
+  gap: 8px;
+  padding: 4px 0;
 }
 
 .led {
   font-family: 'Courier New', ui-monospace, monospace;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
-  font-size: 72px;
+  font-size: 46px;
   line-height: 1;
   color: var(--led);
   text-shadow:
@@ -111,6 +250,18 @@ body {
     0 0 14px rgba(255, 40, 40, 0.7),
     0 0 28px rgba(255, 0, 0, 0.5);
   letter-spacing: 2px;
+}
+.call-fare {
+  text-align: right;
+  font-family: ui-monospace, monospace;
+  color: var(--muted);
+  font-size: 12px;
+}
+.call-fare span {
+  color: #ffb400;
+  font-weight: 800;
+  font-size: 14px;
+  margin-right: 4px;
 }
 
 .led.bump {
@@ -183,6 +334,35 @@ body {
 @keyframes blink {
   50% { opacity: 0.3; }
 }
+
+/* ------- 하단 상태 램프 (반차/주행/할증/복합/지불) ------- */
+.status-lamps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-top: 12px;
+  background: #0a0a0a;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 8px;
+}
+.lamp {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  padding: 6px 0;
+  border-radius: 6px;
+  background: #1c1c1c;
+  color: #3a3a3a;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.lamp.on { color: #fff; }
+#lampRun.on { background: #1db954; box-shadow: 0 0 10px rgba(29, 185, 84, 0.5); }
+#lampSur.on { background: #ff8a00; box-shadow: 0 0 10px rgba(255, 138, 0, 0.5); }
+#lampMix.on { background: #d63384; box-shadow: 0 0 10px rgba(214, 51, 132, 0.5); }
+#lampPay.on { background: #ffb400; color: #1a1a1a; box-shadow: 0 0 10px rgba(255, 180, 0, 0.5); }
+#lampHalf.on { background: #888; }
 
 /* ------- 버튼 ------- */
 

@@ -19,10 +19,60 @@
     </header>
 
     <section class="meter-frame">
-      <div class="meter-label">요금  FARE</div>
-      <div class="meter-display">
-        <span class="led" id="fareLed">0</span>
-        <span class="meter-unit">원</span>
+      <div class="meter-main">
+        <!-- 좌측: 말 + 지표 -->
+        <aside class="horse-panel">
+          <div class="horse-stage">
+            <svg class="horse" id="horseSvg" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <!-- 속도선 (달릴 때만) -->
+              <g class="speed-lines">
+                <line x1="4"  y1="32" x2="14" y2="32" />
+                <line x1="2"  y1="42" x2="10" y2="42" />
+                <line x1="4"  y1="52" x2="14" y2="52" />
+              </g>
+              <!-- 말 몸체 전체 -->
+              <g class="horse-body">
+                <!-- 꼬리 -->
+                <path class="h-tail" d="M22 34 Q14 30 10 40 Q13 48 19 42" />
+                <!-- 몸통 -->
+                <path d="M22 40 C22 30 34 28 50 28 C66 28 76 30 78 40 L78 50 C78 52 76 54 74 54 L26 54 C24 54 22 52 22 50 Z" />
+                <!-- 목 -->
+                <path d="M72 32 Q82 18 90 14" />
+                <!-- 갈기 -->
+                <path d="M73 30 L75 25 L78 30 L80 25 L82 30 L84 25 L86 30" />
+                <!-- 머리 -->
+                <path d="M90 14 L98 15 L99 22 L92 26 L87 22 Z" />
+                <!-- 귀 -->
+                <path d="M92 14 L91 9 L95 13" />
+                <!-- 눈 -->
+                <circle cx="95" cy="19" r="0.9" fill="currentColor" stroke="none"/>
+                <!-- 앞다리 -->
+                <g class="legs-front">
+                  <path d="M32 54 L30 68 L28 70" />
+                  <path d="M42 54 L44 68 L46 70" />
+                </g>
+                <!-- 뒷다리 -->
+                <g class="legs-back">
+                  <path d="M66 54 L64 68 L62 70" />
+                  <path d="M76 54 L78 68 L80 70" />
+                </g>
+              </g>
+            </svg>
+          </div>
+          <div class="horse-surcharge" id="horseSurcharge">0%</div>
+          <div class="horse-year">1996</div>
+          <div class="horse-runchip" id="runChip">주행</div>
+        </aside>
+
+        <!-- 우측: 속도 + 요금 -->
+        <div class="meter-readout">
+          <div class="speed-row"><span class="speed-num" id="speedNum">0.0</span><span class="speed-unit">km/h</span></div>
+          <div class="fare-row">
+            <span class="led" id="fareLed">0</span>
+            <span class="meter-unit">원</span>
+          </div>
+          <div class="call-fare"><span>0</span><small>호출요금</small></div>
+        </div>
       </div>
 
       <div class="meter-stats">
@@ -35,6 +85,15 @@
         <span class="chip" id="nightChip" hidden>심야할증</span>
         <span class="chip" id="outsideChip" hidden>시계외</span>
         <span class="chip muted" id="timeFareChip" hidden>시간요금</span>
+      </div>
+
+      <!-- 하단 상태 램프 (반차/주행/할증/복합/지불) -->
+      <div class="status-lamps">
+        <span class="lamp" id="lampHalf">반차</span>
+        <span class="lamp" id="lampRun">주행</span>
+        <span class="lamp" id="lampSur">할증</span>
+        <span class="lamp" id="lampMix">복합</span>
+        <span class="lamp" id="lampPay">지불</span>
       </div>
     </section>
 
