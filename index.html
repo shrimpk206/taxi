@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>개인택시 장난 여객 🚕</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="panel">
+    <header class="topbar">
+      <div class="brand">🚕 개인택시 <span class="brand-sub">장난 여객</span></div>
+      <div class="kiss-badge" id="cumKissBadge">누적 뽀뽀 0 💋</div>
+    </header>
+
+    <section class="meter-frame">
+      <div class="meter-label">요금  FARE</div>
+      <div class="meter-display">
+        <span class="led" id="fareLed">0</span>
+        <span class="meter-unit">원</span>
+      </div>
+
+      <div class="meter-stats">
+        <div><span>주행거리</span><b id="distStat">0.00 km</b></div>
+        <div><span>경과시간</span><b id="timeStat">00:00</b></div>
+        <div><span>속도</span><b id="speedStat">0 km/h</b></div>
+      </div>
+
+      <div class="surcharge-bar">
+        <span class="chip" id="nightChip" hidden>심야할증</span>
+        <span class="chip" id="outsideChip" hidden>시계외</span>
+        <span class="chip muted" id="timeFareChip" hidden>시간요금</span>
+      </div>
+    </section>
+
+    <section class="controls">
+      <button id="startBtn" class="btn btn-go">운 행 시 작</button>
+      <button id="stopBtn" class="btn btn-stop" disabled>운 행 종 료</button>
+    </section>
+
+    <section class="options">
+      <label class="option">
+        <input type="checkbox" id="outsideSeoul" />
+        <span>시계외 할증 (+20%)</span>
+      </label>
+      <label class="option">
+        <input type="checkbox" id="muteToggle" />
+        <span>효과음 끄기</span>
+      </label>
+      <button class="option-btn" id="historyBtn">📜 기록 보기</button>
+    </section>
+
+    <section class="map-panel">
+      <button id="mapToggle" class="map-toggle">🗺  지도 펼치기  ▾</button>
+      <div id="mapContainer" class="map-container" hidden></div>
+    </section>
+
+    <footer class="hint">
+      운행 종료 누르면 영수증이 나옵니다. 정산은 <b>1,000원 = 뽀뽀 1회</b> 🥰
+    </footer>
+  </main>
+
+  <!-- 영수증 모달 -->
+  <div class="modal" id="receiptModal" hidden>
+    <div class="modal-card">
+      <div id="receiptHost"></div>
+      <div class="modal-actions">
+        <button class="btn btn-small" id="saveRideBtn">기록에 저장</button>
+        <button class="btn btn-small btn-ghost" id="closeReceiptBtn">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기록 모달 -->
+  <div class="modal" id="historyModal" hidden>
+    <div class="modal-card">
+      <div class="modal-title">📜 주행 기록</div>
+      <div id="historyList" class="history-list"></div>
+      <div class="modal-actions">
+        <button class="btn btn-small btn-ghost" id="clearHistoryBtn">전체 삭제</button>
+        <button class="btn btn-small" id="closeHistoryBtn">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 상태 안내 토스트 -->
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

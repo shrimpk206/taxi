@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#2a1010"/>
+      <stop offset="100%" stop-color="#050505"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- 택시 지붕 등 -->
+  <rect x="176" y="86" width="160" height="48" rx="10" fill="#ffcc33"/>
+  <text x="256" y="121" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="30" font-weight="900" fill="#1a1a1a">TAXI</text>
+
+  <!-- 미터기 창 -->
+  <rect x="96" y="170" width="320" height="180" rx="18" fill="#080000" stroke="#3a0000" stroke-width="3"/>
+
+  <!-- LED 숫자 -->
+  <text x="256" y="290" text-anchor="middle" font-family="Courier New, monospace" font-weight="900"
+        font-size="110" fill="#ff2a2a" filter="url(#glow)" letter-spacing="4">
+    1,000
+  </text>
+
+  <!-- 원 표시 -->
+  <text x="256" y="330" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#ff8080" letter-spacing="6">
+    WON
+  </text>
+
+  <!-- 하트 (뽀뽀 느낌) -->
+  <g transform="translate(256 418)">
+    <path d="M0,28 C-48,-6 -72,-50 -38,-72 C-16,-86 2,-72 0,-52 C-2,-72 16,-86 38,-72 C72,-50 48,-6 0,28 Z"
+          fill="#ff4d8a" filter="url(#glow)"/>
+  </g>
+</svg>
