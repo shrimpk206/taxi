@@ -248,9 +248,24 @@ els.muteToggle.addEventListener('change', () => {
   sound.setMuted(els.muteToggle.checked);
 });
 
+// ---- 모달 공통: 배경 클릭 + ESC로 닫기 ----
+function closeModal(modalEl) {
+  modalEl.hidden = true;
+}
+[els.receiptModal, els.historyModal].forEach((m) => {
+  m.addEventListener('click', (e) => {
+    if (e.target === m) closeModal(m); // 배경만, 내부 카드 클릭은 무시
+  });
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (!els.historyModal.hidden) closeModal(els.historyModal);
+  else if (!els.receiptModal.hidden) closeModal(els.receiptModal);
+});
+
 // ---- 영수증 모달 ----
 els.closeReceiptBtn.addEventListener('click', () => {
-  els.receiptModal.hidden = true;
+  closeModal(els.receiptModal);
 });
 
 els.saveRideBtn.addEventListener('click', () => {
@@ -266,7 +281,7 @@ els.saveRideBtn.addEventListener('click', () => {
     outsideSeoul,
   });
   refreshCumKiss();
-  els.receiptModal.hidden = true;
+  closeModal(els.receiptModal);
   toast(`기록에 저장했어요. 뽀뽀 +${kisses} 💋`);
 });
 
@@ -276,7 +291,7 @@ els.historyBtn.addEventListener('click', () => {
   els.historyModal.hidden = false;
 });
 els.closeHistoryBtn.addEventListener('click', () => {
-  els.historyModal.hidden = true;
+  closeModal(els.historyModal);
 });
 els.clearHistoryBtn.addEventListener('click', () => {
   if (!confirm('모든 기록을 삭제할까요?')) return;

@@ -294,6 +294,8 @@ body {
   z-index: 100;
   animation: fade 0.18s ease-out;
 }
+/* [hidden]는 UA 스타일이라 author .modal{display:flex}에 져서 안 닫힘 → 명시적으로 이긴다 */
+.modal[hidden] { display: none; }
 @keyframes fade { from { opacity: 0; } }
 
 .modal-card {
@@ -303,6 +305,8 @@ body {
   padding: 18px 18px 14px;
   width: 100%;
   max-width: 360px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
   box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
 
